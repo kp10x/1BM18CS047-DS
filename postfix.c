@@ -1,91 +1,61 @@
 #include<stdio.h>
 #include<string.h>
+#include<math.h>
 #include<ctype.h>
-#include<stdlib.h>
-void push(char item,char s[100],int *t) ;
-char pop(char s[100],int *t);
-int pre(char sym);
+void push(int s[],int *top,int a)
+{
+  if(*top == 19)
+  {
+    printf("Stack overflow \n");
+  }
+  s[++(*top)] = a;
+}
+int pop(int s[],int *top)
+{
+  if(*top == -1)
+  {
+    printf("Stack underflow \n");
+    return 0;
+  }
+  return s[(*top)--];
+}
+int res(int a, int b, char c)
+{
+   switch(c)
+   {
+     case '+': return (a+b);
+     case '-': return (a-b);
+     case '*': return (a*b);
+     case '/': return (a/b);
+   }
+}
 int main()
 {
-	char infix[20],postfix[20],stack[100];
-	char item,temp;
-	int i=0,t=0;
-	int top=-1;
-	printf("enter infix expression=\n");
-	scanf("%s",infix);
-	while(infix[i]!='\0')
-	{
-		item=infix[i];
-		if(item=='(')
-		{
-			push(item,stack,&top);
-		}
-		else if(isalnum(item))
-		{
-			postfix[t]=item;
-			t++;
-		}
-		else if(item==')')
-		{
-			temp=pop(stack,&top);
-			while(temp!='(')
-			{
-			postfix[t]=temp;
-			t++;
-			temp=pop(stack,&top);
-
-			}
-	       }
-		else
-		{
-			  temp=pop(stack,&top);
-			  while(top!=-1&&(temp)>=pre(item))
-			  {
-				postfix[t]=temp;
-				t++;
-				temp=pop(stack,&top);
-			  }
-			  push(temp,stack,&top);
-			  push(item,stack,&top);
-
-		}
-	       i++;
-	}
-	while(top!=-1)
-	{
-		postfix[t]=pop(stack,&top);
-		t++;
-	}
-	postfix[t]='\0';
-	printf("postfix exp is\n%s",postfix);
-	return 0;
-}
-void push(char item,char s[100],int *t)
-{
-	if(*t==99)
-	{
-		printf("stack overflow");
-	}
-	*t=*t+1;
-	s[*t]=item;
-}
-char pop(char s[100],int *t)
-{
-	char item;
-	item=s[*t];
-	*t=*t-1;
-	return item;
-
-}
-int pre(char sym)
-{
-    switch(sym)
+  int s[20],top,i,value,op1,op2,ans,k;
+  char post[50];top=-1;i=0;
+  printf("Enter the postfix expression \n");
+  scanf("%s",post);
+  while(post[i] != '\0')
+  {
+    if(isdigit(post[i]))
+      { 
+        k = (int)post[i] - 48;
+        push(s, &top, k);
+        }
+    else
     {
-	case '^':return 3;
-	case '*':
-	case '/':return 2;
-	case '+':
-	case '-':return 1;
-	default:return 0;
+      op2 = pop(s,&top);
+      op1 = pop(s,&top);
+      value = res(op1,op2,post[i]);
+      push(s, &top, value);
     }
+    i++;
+  }
+  ans = pop(s,&top);
+  printf("ANSWER = %d \n",ans);
+  return 1;
 }
+  
+  
+  
+  
