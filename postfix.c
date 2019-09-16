@@ -1,64 +1,91 @@
 #include<stdio.h>
-//#include<math.h>
+#include<string.h>
 #include<ctype.h>
-void push(int s[],int *top,int a)
-{
- if(*top==19)
- {
-  printf("Stack Overflow");
-  return;
- }
- s[++(*top)]=a;
-}
-int pop(int s[],int *top)
-{
- if(*top==-1)
- {
-  printf("Stack Underflow");
-  return -1;
- }
- return s[(*top)--];
-} 
-int res(int op1,int op2,char a)
-{
- switch(a)
- {
-  case '+': return (op1+op2);
-  case '-': return (op1-op2);
-  case '*': return (op1*op2);
-  case '/': return (op1/op2);
-//  case '^': return (pow(op1,op2));
- }
-}	         
+#include<stdlib.h>
+void push(char item,char s[100],int *t) ;
+char pop(char s[100],int *t);
+int pre(char sym);
 int main()
 {
- int s[20],top=-1,i=0;
- char post[10];
- char symb,num;
- int op1,op2,value,ans;
- printf("Enter the postfix expression:\n");
- scanf("%s",post);
- while(post[i]!='\0')
- {
-  symb=post[i]; 
-  if(isdigit(symb))
-  {
-   num=(int)symb-48;
-   push(s,&top,num);
-  }
-  else
-  {
-   op2=pop(s,&top);
-   op1=pop(s,&top);
-   value=res(op1,op2,symb);
-   push(s,&top,value);
-  }
-  i++;
- }
- ans=pop(s,&top);
- printf("%d",ans);
- return 1;
- 
-}   
-   
-    
+	char infix[20],postfix[20],stack[100];
+	char item,temp;
+	int i=0,t=0;
+	int top=-1;
+	printf("enter infix expression=\n");
+	scanf("%s",infix);
+	while(infix[i]!='\0')
+	{
+		item=infix[i];
+		if(item=='(')
+		{
+			push(item,stack,&top);
+		}
+		else if(isalnum(item))
+		{
+			postfix[t]=item;
+			t++;
+		}
+		else if(item==')')
+		{
+			temp=pop(stack,&top);
+			while(temp!='(')
+			{
+			postfix[t]=temp;
+			t++;
+			temp=pop(stack,&top);
+
+			}
+	       }
+		else
+		{
+			  temp=pop(stack,&top);
+			  while(top!=-1&&(temp)>=pre(item))
+			  {
+				postfix[t]=temp;
+				t++;
+				temp=pop(stack,&top);
+			  }
+			  push(temp,stack,&top);
+			  push(item,stack,&top);
+
+		}
+	       i++;
+	}
+	while(top!=-1)
+	{
+		postfix[t]=pop(stack,&top);
+		t++;
+	}
+	postfix[t]='\0';
+	printf("postfix exp is\n%s",postfix);
+	return 0;
+}
+void push(char item,char s[100],int *t)
+{
+	if(*t==99)
+	{
+		printf("stack overflow");
+	}
+	*t=*t+1;
+	s[*t]=item;
+}
+char pop(char s[100],int *t)
+{
+	char item;
+	item=s[*t];
+	*t=*t-1;
+	return item;
+
+}
+int pre(char sym)
+{
+    switch(sym)
+    {
+	case '^':return 3;
+	case '*':
+	case '/':return 2;
+	case '+':
+	case '-':return 1;
+	default:return 0;
+    }
+}
