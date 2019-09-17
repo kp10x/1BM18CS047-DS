@@ -18,13 +18,14 @@ NODE getnode()
    exit(0);
   }
 }
-void insert_front(NODE head,int item)
+NODE insert_front(NODE head,int item)
 {
  NODE p;
  p=getnode();
  p->data=item;
  p->next=head;
  head=p;
+ return head;
 }
 void insert_pos(NODE head,int item,int pos)
 {
@@ -82,13 +83,13 @@ void insert_end(NODE head,int item)
 void display(NODE head)
 {
  NODE p;
- if(head=NULL)\
+ if(head==NULL)
   {
    printf("List is empty\n");
    return;
   }
  p=head;
- printf("The linked list contents aree:\n");
+ printf("The linked list contents are:\n");
  while(p!=NULL)
  {
   printf("%d ",p->data);
@@ -97,7 +98,7 @@ void display(NODE head)
 }
 int main()
 {
- NODE head;
+ NODE head=(NODE)malloc(sizeof(struct node));
  int op,sel;
  do
  {
@@ -112,7 +113,7 @@ int main()
    case 1:{int item;
    	   printf("Enter the element to be inserted\n");
    	   scanf("%d",&item);
-   	   insert_front(head,item);
+   	   head=insert_front(head,item);
    	   break;
    	  } 
    case 2:{int item,pos;
